@@ -1,0 +1,21 @@
+student_results = [
+    {
+        "name": "Juan Dela Cruz",
+        "subject": "Rule Creation and Analysis",
+        "score": "20/20",
+# Start of Markdown content
+output = f"# 📝 Student Results Summary\nGenerated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+# Table headers
+output += "| Name | Subject | Score | Comments |\n"
+output += "|------|---------|-------|----------|\n"
+
+# Add each student's result
+for result in student_results:
+    output += f"| {result['name']} | {result['subject']} | {result['score']} | {result['comments']} |\n"
+
+# Save to markdown file
+with open("results-summary.md", "w", encoding="utf-8") as f:
+    f.write(output)
+
+print("✅ Student results summary generated as 'results-summary.md'")
