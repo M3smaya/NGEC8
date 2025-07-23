@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Creation and Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff;
+        }
+        
+        .category-section {
+            transition: all 0.3s ease;
+        }
+        
+        .category-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .rule-card {
+            transition: all 0.2s ease;
+        }
+        
+        .rule-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .feedback {
+            transition: all 0.3s ease;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .feedback.show {
+            opacity: 1;
+            max-height: 500px;
+        }
+        
+        textarea {
+            resize: vertical;
+        }
+        
+        .print-button {
+            display: none;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            
+            .print-only {
+                display: block !important;
+            }
+            
+            body {
+                background-color: white;
+                font-size: 12pt;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+            }
+        }
+        
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1em;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-800 mb-2">Rule Creation & Analysis</h1>
+            <p class="text-lg text-blue-600 mb-4">Create one meaningful rule for each category and explain its importance</p>
+        </header>
+        
+        <!-- Learner Information Section -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-blue-700 mb-4">Learner Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="learner-name" class="block text-gray-700 font-medium mb-1">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="learner-name" 
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-300 focus:outline-none"
+                        placeholder="Enter your full name">
+                </div>
+                <div>
+                    <label for="learner-section" class="block text-gray-700 font-medium mb-1">Section</label>
+                    <select 
+                        id="learner-section" 
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-300 focus:outline-none"
+                        required>
+                        <option value="" disabled selected>Select your section</option>
+                        <option value="Bellatrix">Bellatrix</option>
+                        <option value="Gienah">Gienah</option>
+                        <option value="Hadar">Hadar</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-6 no-print">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-xl font-bold text-blue-700">Your Progress:</h2>
+                <span id="completion-status" class="text-lg font-semibold text-blue-800 bg-blue-100 px-3 py-1 rounded-lg">0/6 Complete</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div id="progress-bar" class="progress-bar bg-blue-600 h-4 rounded-full w-0"></div>
+            </div>
+        </div>
+        
+        <div id="categories-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <!-- Home Category -->
+            <div class="category-section bg-red-50 border-4 border-red-300 rounded-xl p-4 flex flex-col">
+                <h2 class="text-2xl font-bold text-red-700 mb-4 text-center">Home Rule</h2>
+                <div class="flex items-center justify-center mb-4">
+                    <div class="text-5xl">🏠</div>
+                </div>
+                
+                <div class="rule-card bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-red-700 mb-2">Create a Home Rule</h3>
+                    <p class="text-sm text-gray-600 mb-3">Think about a rule that would help maintain harmony, safety, or organization in a home environment.</p>
+                    <textarea 
+                        id="home-rule"
+                        class="w-full p-2 border border-red-200 rounded-md mb-3 focus:ring-2 focus:ring-red-300 focus:border-red-300 focus:outline-none" 
+                        rows="3" 
+                        placeholder="Enter your home rule..."></textarea>
+                    <h3 class="text-lg font-semibold text-red-700 mb-2">Why is this important?</h3>
+                    <textarea 
+                        id="home-explanation"
+                        class="w-full p-2 border border-red-200 rounded-md mb-2 focus:ring-2 focus:ring-red-300 focus:border-red-300 focus:outline-none" 
+                        rows="5" 
+                        placeholder="Explain why this rule is important for a home environment..."></textarea>
+                </div>
+            </div>
+            
+            <!-- School Category -->
+            <div class="category-section bg-blue-50 border-4 border-blue-300 rounded-xl p-4 flex flex-col">
+                <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">School Rule</h2>
+                <div class="flex items-center justify-center mb-4">
+                    <div class="text-5xl">🏫</div>
+                </div>
+                
+                <div class="rule-card bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-blue-700 mb-2">Create a School Rule</h3>
+                    <p class="text-sm text-gray-600 mb-3">Consider a rule that would enhance learning, safety, or community within an educational setting.</p>
+                    <textarea 
+                        id="school-rule"
+                        class="w-full p-2 border border-blue-200 rounded-md mb-3 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 focus:outline-none" 
+                        rows="3" 
+                        placeholder="Enter your school rule..."></textarea>
+                    <h3 class="text-lg font-semibold text-blue-700 mb-2">Why is this important?</h3>
+                    <textarea 
+                        id="school-explanation"
+                        class="w-full p-2 border border-blue-200 rounded-md mb-2 focus:ring-2 focus:ring-blue-300 focus:border-blue-300 focus:outline-none" 
+                        rows="5" 
+                        placeholder="Explain why this rule is important for a school environment..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Community Category -->
+            <div class="category-section bg-green-50 border-4 border-green-300 rounded-xl p-4 flex flex-col">
+                <h2 class="text-2xl font-bold text-green-700 mb-4 text-center">Community Rule</h2>
+                <div class="flex items-center justify-center mb-4">
+                    <div class="text-5xl">🏙️</div>
+                </div>
+                
+                <div class="rule-card bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-green-700 mb-2">Create a Community Rule</h3>
+                    <p class="text-sm text-gray-600 mb-3">Develop a rule that would benefit society, promote cooperation, or enhance public spaces.</p>
+                    <textarea 
+                        id="community-rule"
+                        class="w-full p-2 border border-green-200 rounded-md mb-3 focus:ring-2 focus:ring-green-300 focus:border-green-300 focus:outline-none" 
+                        rows="3" 
+                        placeholder="Enter your community rule..."></textarea>
+                    <h3 class="text-lg font-semibold text-green-700 mb-2">Why is this important?</h3>
+                    <textarea 
+                        id="community-explanation"
+                        class="w-full p-2 border border-green-200 rounded-md mb-2 focus:ring-2 focus:ring-green-300 focus:border-green-300 focus:outline-none" 
+                        rows="5" 
+                        placeholder="Explain why this rule is important for a community environment..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex justify-center mb-8 no-print">
+            <button id="submit-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors">
+                Submit & Analyze
+            </button>
+        </div>
+        
+        <div id="feedback-container" class="feedback bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-yellow-800 text-center">Analysis & Feedback</h2>
+                <button id="print-feedback" class="print-button bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors no-print">
+                    Print Feedback
+                </button>
+            </div>
+            <div id="feedback-content" class="space-y-6">
+                <!-- Feedback will be generated here -->
+            </div>
+        </div>
+        
+        <div id="reflection-section" class="hidden mt-8 p-6 bg-indigo-50 border-2 border-indigo-200 rounded-xl">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-4 text-center">Reflection Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-indigo-700 mb-2">1. How do rules differ across these three contexts?</h3>
+                    <textarea 
+                        id="reflection-1"
+                        class="w-full p-3 border border-indigo-200 rounded-md focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 focus:outline-none" 
+                        rows="4" 
+                        placeholder="Enter your reflection..."></textarea>
+                </div>
+                
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-indigo-700 mb-2">2. What values are reflected in the rules you created?</h3>
+                    <textarea 
+                        id="reflection-2"
+                        class="w-full p-3 border border-indigo-200 rounded-md focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 focus:outline-none" 
+                        rows="4" 
+                        placeholder="Enter your reflection..."></textarea>
+                </div>
+                
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-indigo-700 mb-2">3. How might these rules impact different individuals in each context?</h3>
+                    <textarea 
+                        id="reflection-3"
+                        class="w-full p-3 border border-indigo-200 rounded-md focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 focus:outline-none" 
+                        rows="4" 
+                        placeholder="Enter your reflection..."></textarea>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mt-6 no-print">
+                <button id="save-button" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors">
+                    Save Reflections
+                </button>
+            </div>
+        </div>
+        
+        <div id="completion-message" class="hidden mt-8 p-6 bg-blue-100 rounded-xl">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-3xl font-bold text-blue-800">🎉 Exercise Complete! 🎉</h2>
+                <button id="print-summary" class="print-button bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors no-print">
+                    Print Summary
+                </button>
+            </div>
+            <p class="text-xl text-blue-700 mb-4">You've successfully created and analyzed rules for all three contexts.</p>
+            
+            <div id="final-summary" class="bg-white p-6 rounded-lg shadow-md text-left mb-6">
+                <div id="learner-info-display" class="mb-4 pb-3 border-b border-gray-200">
+                    <!-- Learner info will be inserted here -->
+                </div>
+                
+                <h3 class="text-lg font-bold text-blue-800 mb-3">Your Rules Summary:</h3>
+                <div id="rules-summary" class="space-y-3 text-gray-800 mb-6">
+                    <!-- Rules summary will be inserted here -->
+                </div>
+                
+                <h3 class="text-lg font-bold text-blue-800 mb-3">Your Reflections:</h3>
+                <div id="reflections-summary" class="space-y-3 text-gray-800">
+                    <!-- Reflections summary will be inserted here -->
+                </div>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-300 text-center">
+                <p class="text-yellow-800 font-medium">Your responses have been recorded. Thank you for completing this exercise!</p>
+                <p class="text-yellow-700 text-sm mt-1">You may print your summary for your records using the Print Summary button above.</p>
+            </div>
+        </div>
+        
+        <!-- Print-only header that appears when printing -->
+        <div class="print-only hidden">
+            <div id="print-header" class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2">Rule Creation & Analysis Exercise</h1>
+                <div id="print-learner-info" class="text-lg">
+                    <!-- Print learner info will be inserted here -->
+                </div>
+                <p class="text-sm text-gray-600 mt-2">This document contains the learner's created rules, explanations, and reflections.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const allTextareas = document.querySelectorAll('textarea');
+            const submitButton = document.getElementById('submit-button');
+            const feedbackContainer = document.getElementById('feedback-container');
+            const feedbackContent = document.getElementById('feedback-content');
+            const reflectionSection = document.getElementById('reflection-section');
+            const completionMessage = document.getElementById('completion-message');
+            const saveButton = document.getElementById('save-button');
+            const progressBar = document.getElementById('progress-bar');
+            const completionStatus = document.getElementById('completion-status');
+            const rulesSummary = document.getElementById('rules-summary');
+            const reflectionsSummary = document.getElementById('reflections-summary');
+            const learnerInfoDisplay = document.getElementById('learner-info-display');
+            const printFeedbackButton = document.getElementById('print-feedback');
+            const printSummaryButton = document.getElementById('print-summary');
+            const printLearnerInfo = document.getElementById('print-learner-info');
+            
+            let completedFields = 0;
+            const totalFields = 6; // 3 rules + 3 explanations
+            let exerciseCompleted = false;
+            
+            // Track changes in textareas and inputs
+            allTextareas.forEach(textarea => {
+                textarea.addEventListener('input', updateProgress);
+            });
+            
+            document.getElementById('learner-name').addEventListener('input', updateProgress);
+            document.getElementById('learner-section').addEventListener('change', updateProgress);
+            
+            // Update progress when textareas are filled
+            function updateProgress() {
+                // If exercise is already completed, don't allow changes
+                if (exerciseCompleted) {
+                    return;
+                }
+                
+                completedFields = 0;
+                
+                // Check rule fields
+                const homeRule = document.getElementById('home-rule').value.trim();
+                const homeExplanation = document.getElementById('home-explanation').value.trim();
+                const schoolRule = document.getElementById('school-rule').value.trim();
+                const schoolExplanation = document.getElementById('school-explanation').value.trim();
+                const communityRule = document.getElementById('community-rule').value.trim();
+                const communityExplanation = document.getElementById('community-explanation').value.trim();
+                
+                if (homeRule) completedFields++;
+                if (homeExplanation) completedFields++;
+                if (schoolRule) completedFields++;
+                if (schoolExplanation) completedFields++;
+                if (communityRule) completedFields++;
+                if (communityExplanation) completedFields++;
+                
+                const progressPercentage = (completedFields / totalFields) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                completionStatus.textContent = `${completedFields}/${totalFields} Complete`;
+                
+                // Check learner info
+                const learnerName = document.getElementById('learner-name').value.trim();
+                const learnerSection = document.getElementById('learner-section').value;
+                
+                // Enable/disable submit button based on learner info
+                if (learnerName && learnerSection) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    submitButton.disabled = true;
+                    submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+            
+            // Submit button handler
+            submitButton.addEventListener('click', function() {
+                // Check if learner info is completed
+                const learnerName = document.getElementById('learner-name').value.trim();
+                const learnerSection = document.getElementById('learner-section').value;
+                
+                if (!learnerName || !learnerSection) {
+                    alert("Please enter your name and select your section before submitting.");
+                    return;
+                }
+                
+                // Check if all rule and explanation fields are completed
+                const homeRule = document.getElementById('home-rule').value.trim();
+                const homeExplanation = document.getElementById('home-explanation').value.trim();
+                const schoolRule = document.getElementById('school-rule').value.trim();
+                const schoolExplanation = document.getElementById('school-explanation').value.trim();
+                const communityRule = document.getElementById('community-rule').value.trim();
+                const communityExplanation = document.getElementById('community-explanation').value.trim();
+                
+                const incompleteFields = [];
+                
+                if (!homeRule) incompleteFields.push('Home Rule');
+                if (!homeExplanation) incompleteFields.push('Home Rule Explanation');
+                if (!schoolRule) incompleteFields.push('School Rule');
+                if (!schoolExplanation) incompleteFields.push('School Rule Explanation');
+                if (!communityRule) incompleteFields.push('Community Rule');
+                if (!communityExplanation) incompleteFields.push('Community Rule Explanation');
+                
+                if (incompleteFields.length > 0) {
+                    alert(`Please complete the following fields before submitting:\n- ${incompleteFields.join('\n- ')}`);
+                    return;
+                }
+                
+                // Show feedback
+                feedbackContainer.classList.add('show');
+                
+                // Generate feedback
+                generateFeedback();
+                
+                // Show reflection section
+                setTimeout(() => {
+                    reflectionSection.classList.remove('hidden');
+                    reflectionSection.scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+                
+                // Disable all input fields after submission
+                disableInputFields();
+            });
+            
+            // Disable all input fields
+            function disableInputFields() {
+                document.getElementById('learner-name').disabled = true;
+                document.getElementById('learner-section').disabled = true;
+                
+                document.getElementById('home-rule').disabled = true;
+                document.getElementById('home-explanation').disabled = true;
+                document.getElementById('school-rule').disabled = true;
+                document.getElementById('school-explanation').disabled = true;
+                document.getElementById('community-rule').disabled = true;
+                document.getElementById('community-explanation').disabled = true;
+                
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            
+            // Generate feedback for all rules
+            function generateFeedback() {
+                // Clear existing feedback
+                feedbackContent.innerHTML = '';
+                
+                // Get learner info
+                const learnerName = document.getElementById('learner-name').value;
+                const learnerSection = document.getElementById('learner-section').value;
+                
+                // Add learner info to feedback
+                const learnerInfoElement = document.createElement('div');
+                learnerInfoElement.className = 'bg-white p-4 rounded-lg shadow-md mb-6';
+                learnerInfoElement.innerHTML = `
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Feedback for:</h3>
+                    <p class="text-gray-700"><strong>Name:</strong> ${learnerName}</p>
+                    <p class="text-gray-700"><strong>Section:</strong> ${learnerSection}</p>
+                `;
+                feedbackContent.appendChild(learnerInfoElement);
+                
+                // Get rule values
+                const homeRule = document.getElementById('home-rule').value;
+                const homeExplanation = document.getElementById('home-explanation').value;
+                const schoolRule = document.getElementById('school-rule').value;
+                const schoolExplanation = document.getElementById('school-explanation').value;
+                const communityRule = document.getElementById('community-rule').value;
+                const communityExplanation = document.getElementById('community-explanation').value;
+                
+                // Add home rule feedback
+                const homeFeedback = document.createElement('div');
+                homeFeedback.className = 'bg-white p-4 rounded-lg shadow-md';
+                homeFeedback.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xl mr-2">🏠</span>
+                        <h3 class="text-lg font-semibold text-red-700">Home Rule Analysis</h3>
+                    </div>
+                    <p class="font-medium mb-2">"${homeRule}"</p>
+                    <div class="text-sm mb-3">
+                        <p class="font-medium text-red-700">Your Explanation:</p>
+                        <p class="text-gray-700 italic">"${homeExplanation}"</p>
+                    </div>
+                    <div class="text-sm">
+                        <p class="font-medium text-indigo-700">Analysis:</p>
+                        <p class="text-gray-700">${analyzeRule('home', homeRule, homeExplanation)}</p>
+                    </div>
+                `;
+                feedbackContent.appendChild(homeFeedback);
+                
+                // Add school rule feedback
+                const schoolFeedback = document.createElement('div');
+                schoolFeedback.className = 'bg-white p-4 rounded-lg shadow-md';
+                schoolFeedback.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xl mr-2">🏫</span>
+                        <h3 class="text-lg font-semibold text-blue-700">School Rule Analysis</h3>
+                    </div>
+                    <p class="font-medium mb-2">"${schoolRule}"</p>
+                    <div class="text-sm mb-3">
+                        <p class="font-medium text-blue-700">Your Explanation:</p>
+                        <p class="text-gray-700 italic">"${schoolExplanation}"</p>
+                    </div>
+                    <div class="text-sm">
+                        <p class="font-medium text-indigo-700">Analysis:</p>
+                        <p class="text-gray-700">${analyzeRule('school', schoolRule, schoolExplanation)}</p>
+                    </div>
+                `;
+                feedbackContent.appendChild(schoolFeedback);
+                
+                // Add community rule feedback
+                const communityFeedback = document.createElement('div');
+                communityFeedback.className = 'bg-white p-4 rounded-lg shadow-md';
+                communityFeedback.innerHTML = `
+                    <div class="flex items-center mb-2">
+                        <span class="text-xl mr-2">🏙️</span>
+                        <h3 class="text-lg font-semibold text-green-700">Community Rule Analysis</h3>
+                    </div>
+                    <p class="font-medium mb-2">"${communityRule}"</p>
+                    <div class="text-sm mb-3">
+                        <p class="font-medium text-green-700">Your Explanation:</p>
+                        <p class="text-gray-700 italic">"${communityExplanation}"</p>
+                    </div>
+                    <div class="text-sm">
+                        <p class="font-medium text-indigo-700">Analysis:</p>
+                        <p class="text-gray-700">${analyzeRule('community', communityRule, communityExplanation)}</p>
+                    </div>
+                `;
+                feedbackContent.appendChild(communityFeedback);
+                
+                // Add comparative analysis
+                const comparativeAnalysis = document.createElement('div');
+                comparativeAnalysis.className = 'bg-yellow-100 p-4 rounded-lg shadow-md';
+                comparativeAnalysis.innerHTML = `
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-2">Comparative Analysis</h3>
+                    <p class="text-gray-800">${generateComparativeAnalysis(homeRule, schoolRule, communityRule)}</p>
+                `;
+                feedbackContent.appendChild(comparativeAnalysis);
+                
+                // Show print button
+                printFeedbackButton.style.display = 'block';
+            }
+            
+            // Analyze a single rule
+            function analyzeRule(context, rule, explanation) {
+                // This is a simplified analysis generator
+                // In a real application, this could be more sophisticated
+                
+                let analysis = '';
+                
+                // Check rule length and complexity
+                if (rule.length < 15) {
+                    analysis += "Your rule is concise, which can aid clarity and memorability. ";
+                } else if (rule.length > 50) {
+                    analysis += "Your rule is detailed, which provides clear guidance but may be challenging to remember in full. ";
+                }
+                
+                // Check for key themes in the explanation
+                if (explanation.toLowerCase().includes('safety') || explanation.toLowerCase().includes('secure')) {
+                    analysis += "Your explanation emphasizes safety considerations, which is a fundamental concern in rule creation. ";
+                }
+                
+                if (explanation.toLowerCase().includes('respect') || explanation.toLowerCase().includes('considerate')) {
+                    analysis += "You've highlighted respect and consideration for others, which builds community and mutual understanding. ";
+                }
+                
+                if (explanation.toLowerCase().includes('learn') || explanation.toLowerCase().includes('education')) {
+                    analysis += "Your focus on educational outcomes demonstrates an understanding of developmental goals. ";
+                }
+                
+                if (explanation.toLowerCase().includes('consequence') || explanation.toLowerCase().includes('result')) {
+                    analysis += "You've considered the consequences of rule adherence or violation, which is important for effective rule implementation. ";
+                }
+                
+                // Add context-specific analysis
+                switch(context) {
+                    case 'home':
+                        analysis += "Home rules often balance individual autonomy with family cohesion. Your rule addresses this balance by establishing expectations while respecting individual needs.";
+                        break;
+                    case 'school':
+                        analysis += "School rules must support both academic achievement and social development. Your rule creates a structure that facilitates learning while acknowledging the social nature of educational environments.";
+                        break;
+                    case 'community':
+                        analysis += "Community rules require consideration of diverse stakeholders and public interests. Your rule demonstrates awareness of how individual actions impact collective well-being.";
+                        break;
+                }
+                
+                return analysis || "Your explanation provides a thoughtful rationale for this rule's implementation.";
+            }
+            
+            // Generate comparative analysis of all rules
+            function generateComparativeAnalysis(homeRule, schoolRule, communityRule) {
+                let analysis = "Looking across your three rules, there are interesting patterns in how you approach rule-making in different contexts. ";
+                
+                // Check for similarities in approach
+                const allRules = [homeRule.toLowerCase(), schoolRule.toLowerCase(), communityRule.toLowerCase()];
+                
+                if (allRules.every(rule => rule.includes("respect") || rule.includes("considerate"))) {
+                    analysis += "Respect appears as a common theme across all contexts, suggesting you value interpersonal consideration regardless of setting. ";
+                }
+                
+                if (allRules.every(rule => rule.includes("safety") || rule.includes("secure") || rule.includes("protect"))) {
+                    analysis += "Safety is prioritized across all your rules, indicating a consistent concern for well-being in various environments. ";
+                }
+                
+                // Check for differences in complexity
+                const ruleLengths = [homeRule.length, schoolRule.length, communityRule.length];
+                const maxLength = Math.max(...ruleLengths);
+                const minLength = Math.min(...ruleLengths);
+                
+                if (maxLength > minLength * 2) {
+                    analysis += "There's significant variation in the complexity of your rules across contexts, which may reflect your understanding of the different levels of structure needed in each environment. ";
+                }
+                
+                analysis += "Your rule-making approach demonstrates an understanding that effective rules must be contextually appropriate while maintaining consistent underlying values.";
+                
+                return analysis;
+            }
+            
+            // Save button handler
+            saveButton.addEventListener('click', function() {
+                // Check if reflection fields are completed
+                const reflection1 = document.getElementById('reflection-1').value.trim();
+                const reflection2 = document.getElementById('reflection-2').value.trim();
+                const reflection3 = document.getElementById('reflection-3').value.trim();
+                
+                const incompleteReflections = [];
+                
+                if (!reflection1) incompleteReflections.push('Reflection Question 1');
+                if (!reflection2) incompleteReflections.push('Reflection Question 2');
+                if (!reflection3) incompleteReflections.push('Reflection Question 3');
+                
+                if (incompleteReflections.length > 0) {
+                    alert(`Please complete the following reflection questions before saving:\n- ${incompleteReflections.join('\n- ')}`);
+                    return;
+                }
+                
+                // Get learner info
+                const learnerName = document.getElementById('learner-name').value;
+                const learnerSection = document.getElementById('learner-section').value;
+                
+                // Update learner info display
+                learnerInfoDisplay.innerHTML = `
+                    <p class="text-lg font-semibold">${learnerName}</p>
+                    <p class="text-gray-600">${learnerSection}</p>
+                `;
+                
+                // Update print learner info
+                printLearnerInfo.innerHTML = `
+                    <p><strong>${learnerName}</strong> | ${learnerSection}</p>
+                `;
+                
+                // Create summary for completion message
+                const homeRule = document.getElementById('home-rule').value;
+                const schoolRule = document.getElementById('school-rule').value;
+                const communityRule = document.getElementById('community-rule').value;
+                
+                rulesSummary.innerHTML = `
+                    <p><strong>🏠 Home:</strong> "${homeRule}"</p>
+                    <p><strong>🏫 School:</strong> "${schoolRule}"</p>
+                    <p><strong>🏙️ Community:</strong> "${communityRule}"</p>
+                `;
+                
+                // Create reflections summary
+                reflectionsSummary.innerHTML = `
+                    <p><strong>How rules differ across contexts:</strong> "${reflection1}"</p>
+                    <p><strong>Values reflected in rules:</strong> "${reflection2}"</p>
+                    <p><strong>Impact on different individuals:</strong> "${reflection3}"</p>
+                `;
+                
+                // Show completion message
+                completionMessage.classList.remove('hidden');
+                completionMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                // Show print button
+                printSummaryButton.style.display = 'block';
+                
+                // Disable reflection textareas
+                document.getElementById('reflection-1').disabled = true;
+                document.getElementById('reflection-2').disabled = true;
+                document.getElementById('reflection-3').disabled = true;
+                
+                // Disable save button
+                saveButton.disabled = true;
+                saveButton.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                // Mark exercise as completed
+                exerciseCompleted = true;
+            });
+            
+            // Print feedback button handler
+            printFeedbackButton.addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Print summary button handler
+            printSummaryButton.addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Initialize
+            updateProgress();
+            printFeedbackButton.style.display = 'none';
+            printSummaryButton.style.display = 'none';
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9637a95fb7a285ce',t:'MTc1MzIzNjgzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
